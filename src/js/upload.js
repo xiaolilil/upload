@@ -346,6 +346,7 @@
             });
             const { code } = data;
             if (code === 0) {
+              
                 upload_progrees_value.style.width = `100%`;
                 alert('文件上传成功!');
                 return;

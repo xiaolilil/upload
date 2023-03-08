@@ -9,36 +9,103 @@
   </head>
   <body>
     <div class="box">
-      <div class="container">
-        <h3>单一文件上传【FORM-DATA】</h3>
-        <div class="upload upload1">
-          <div class="handle">
-            <button class="selectFile">选择文件</button>
-            <button  class="uploadBtn ">上传到服务器</button>
-            <!-- accept=".jpg" 限制上传文件类型 多个用逗号分割 -->
-            <input class="fileIpt" type="file" name="" id="" />
-          </div>
-          <p class="tips">只能上传 png/jpg/jpeg 格式图片， 且大小不能超过 2MB</p>
-        
-          <ul class="fileList">
-            <!-- <li class="item">
-              <span>文件: xxx</span>
-              <span><em>移除</em></span>
-            </li> -->
-          </ul>
-        </div>
-      </div>
-      <!-- base64 -->
-      <div class="container">
-        <h3>单一文件上传【FORM-DATA】BASE64</h3>
-        <div class="upload upload2">
-          <div class="handle">
-            <button class="selectFile">选择文件</button>
-            <!-- accept=".jpg" 限制上传文件类型 多个用逗号分割 -->
-            <input class="fileIpt" type="file" name="" id="" />
-          </div>
-        
+      <div class="item">
+        <div class="container">
+          <h3>单一文件上传【FORM-DATA】</h3>
+          <div class="upload upload1">
+            <div class="handle">
+              <button class="selectFile">选择文件</button>
+              <button  class="uploadBtn ">上传到服务器</button>
+              <!-- accept=".jpg" 限制上传文件类型 多个用逗号分割 -->
+              <input class="fileIpt" type="file" name="" id="" />
+            </div>
+            <p class="tips">只能上传 png/jpg/jpeg 格式图片， 且大小不能超过 2MB</p>
           
+            <ul class="fileList">
+              <!-- <li class="item">
+                <span>文件: xxx</span>
+                <span><em>移除</em></span>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+  
+        <!-- base64 -->
+        <div class="container">
+          <h3>单一文件上传【FORM-DATA】BASE64</h3>
+          <div class="upload upload2">
+            <div class="handle">
+              <button class="selectFile">选择文件</button>
+              <input class="fileIpt" type="file" />
+            </div>
+          
+            
+          </div>
+        </div>
+  
+        <!-- hash名字处理 缩略图  自动生成名字-->
+        <div class="container">
+          <h3>单一文件上传hash 缩略图 自动生成名字</h3>
+          <div class="upload upload3">
+            <div class="handle">
+              <button class="selectFile">选择文件</button>
+              <button  class="uploadBtn ">上传到服务器</button>
+              <input class="fileIpt" type="file" name="" id="" />
+            </div>
+          
+            <ul class="abbre">
+              <img src="" alt="">
+            </ul>
+          </div>
+        </div>
+
+      </div>
+      <div class="item">
+        <!-- 进度管控 -->
+        <div class="container">
+          <h3>单一文件上传 进度管控</h3>
+          <div class="upload upload4">
+            <div class="handle">
+              <button class="selectFile">上传文件</button>
+              <input class="fileIpt" type="file" />
+            </div>
+          
+            <ul class="progress">
+              <div class="value"></div>
+              <span class="text"></span>
+            </ul>
+          </div>
+        </div>
+  
+        <!-- 多文件上传 -->
+        <div class="container">
+          <h3>多文件上传 进度管控</h3>
+          <div class="upload upload5">
+            <div class="handle">
+              <button class="selectFile">选择文件</button>
+              <button  class="uploadBtn ">上传到服务器</button>
+
+              <input class="fileIpt" multiple type="file" />
+            </div>
+            <div class="list">
+
+            </div>
+            
+          </div>
+        </div>
+  
+        <!-- 拖拽上传-->
+        <div class="container">
+          <h3>拖拽上传</h3>
+          <div class="upload upload6">
+            <div class="handle">
+              <input class="fileIpt" type="file" name="" id="" />
+              <img class="icon" src="./云上传.png" alt="">
+              <div class="dragtips">将文件拖到此处，或 <span class="clickUpload">点击上传</span></div>
+            </div>
+            <div class="mark">正在上传中，请稍等...</div>
+          
+          </div>
         </div>
       </div>
     </div>

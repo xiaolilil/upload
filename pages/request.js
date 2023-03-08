@@ -16,6 +16,7 @@ http.defaults.transformRequest = (data, headers) => {
 http.interceptors.response.use(response => {
   return response.data
 }, err => {
+  console.log('err',err)
   // 请求失败统一处理
   return Promise.reject(err)
 })
