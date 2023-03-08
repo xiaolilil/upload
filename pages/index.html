@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <div class="box">
+      <div class="container">
+        <h3>单一文件上传【FORM-DATA】</h3>
+        <div class="upload upload1">
+          <div class="handle">
+            <button class="selectFile">选择文件</button>
+            <button  class="uploadBtn ">上传到服务器</button>
+            <!-- accept=".jpg" 限制上传文件类型 多个用逗号分割 -->
+            <input class="fileIpt" type="file" name="" id="" />
+          </div>
+          <p class="tips">只能上传 png/jpg/jpeg 格式图片， 且大小不能超过 2MB</p>
+        
+          <ul class="fileList">
+            <!-- <li class="item">
+              <span>文件: xxx</span>
+              <span><em>移除</em></span>
+            </li> -->
+          </ul>
+        </div>
+      </div>
+      <!-- base64 -->
+      <div class="container">
+        <h3>单一文件上传【FORM-DATA】BASE64</h3>
+        <div class="upload upload2">
+          <div class="handle">
+            <button class="selectFile">选择文件</button>
+            <!-- accept=".jpg" 限制上传文件类型 多个用逗号分割 -->
+            <input class="fileIpt" type="file" name="" id="" />
+          </div>
+        
+          
+        </div>
+      </div>
+    </div>
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/axios/dist/axios.min.js"></script> 
+    <script src="../node_modules/qs/dist/qs.js"></script>
+    <script src="../node_modules/spark-md5/spark-md5.min.js"></script>
+    <script src="../src/js/utils.js"></script>
+    <script src="./request.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>

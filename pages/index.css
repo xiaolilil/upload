@@ -1,0 +1,145 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+.box {
+  margin: 50px;
+  background-color: #eee;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.container {
+  width: 30%;
+  height: 200px;
+  background-color: #f8f8f8;
+}
+.upload {
+  height: 160px;
+  border: 1px solid #333;
+  margin-top: 15px;
+  padding: 7px;
+}
+.selectFile{
+  width: 80px;
+  height: 30px;
+  background-color: rgb(39, 117, 234);
+  color: #fff;
+  border-radius: 5px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.disable{
+  background-color: #ccc;
+  color: #555;
+  cursor: not-allowed;
+}
+.selectFile.loading{
+  cursor: not-allowed;
+  position: relative;
+  height: 30px;
+  z-index: 10;
+
+}
+.selectFile.loading::before{
+  content: url('./loading.gif');
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 10;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate{
+  100%{
+    transform: rotate(-360deg);
+    transform-origin: center center;
+  }
+}
+.selectFile.loading::after{
+  content: 'loading';
+  width: 100%;
+  height: 30px;
+  background-color: #ccc;
+  color: #555;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding-left: 25px;
+  line-height: 30px;
+  border-radius: 5px;
+}
+.uploadBtn{
+  padding: 5px 10px;
+  background-color: rgb(49, 211, 49);
+  color: #fff;
+  border-radius: 5px;
+}
+.uploadBtn.loading{
+  cursor: not-allowed;
+  position: relative;
+  height: 30px;
+  z-index: 1;
+}
+.uploadBtn.loading::before{
+  content: url('./loading.gif');
+  /* width: 3px;
+  height: 3px; */
+  zoom: 5%;
+  position: absolute;
+  left: 10%;
+  top: 20%;
+  z-index: 10;
+  animation: rotate 1s linear infinite;
+}
+.uploadBtn.loading::after{
+  content: 'loading';
+  width: 100%;
+  height: 30px;
+  background-color: #ccc;
+  color: #555;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 30px;
+  border-radius: 5px;
+  padding-left: 30px;
+  margin-left: -0.5px;
+  box-sizing: border-box;
+}
+.fileIpt{
+  width: 1px;
+  height: 1px;
+}
+.tips{
+  color: #726e6e;
+  font-size: 14px;
+  line-height: 30px;
+}
+.fileList{
+  margin-top: 10px;
+  padding: 0;
+  list-style: none;
+  width: 80%;
+  display: none;
+}
+.fileList li{
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+em{
+  font-style: normal;
+  color: red;
+  cursor: pointer;
+}
+button{
+  cursor: pointer;
+}
