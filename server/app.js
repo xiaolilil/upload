@@ -78,7 +78,8 @@ const writeFile = function (res, path, file, filename, stream) {
     return new Promise((resolve, reject) => {
         if (stream) {
         }
-        fs.writeFile(path, file, (err) => {
+        // console.log('file',file)
+        fs.writeFile(path, JSON.stringify(file), (err) => {
             if (err) {
                 reject(err);
                 res.send({
@@ -100,7 +101,7 @@ const writeFile = function (res, path, file, filename, stream) {
 
 // 大文件上传 & 合并切片
 const merge = (HASH, count) => {
-    return new Promise( async (resolve, reject) => {
+    return new Promise( async (res, rej) => {
         let path = `${uploadDir}/${HASH}`
         let fileList = []
         let suffix
@@ -109,21 +110,33 @@ const merge = (HASH, count) => {
             rject('HASH path  is not found!')
             return
         }
+        // 获得所有的切片
         fileList = fs.readdirSync(path);
+        // fileList = JSON.parse(JSON.stringify(fileList))
         if (fileList.length < count) {
             reject('the slice has not been uploaded!')
             return
         }
-        fileList.sort((a, b) => {
+        // 排序
+
+      let arr = fileList.sort((a, b) => {
             let reg = /_(\d+)/;
             return reg.exec(a)[1] - reg.exec(b)[1];
-        }).forEach(item => {
+        })
+        arr.forEach(item => {
             !suffix ? suffix = /\.([0-9a-zA-Z]+)$/.exec(item)[1] : null // 处理文件后缀
+            // console.log('uploadDir',uploadDir)
+            // console.log('path',path)
             fs.appendFileSync(`${uploadDir}/${HASH}.${suffix}`, fs.readFileSync(`${path}/${item}`));
             fs.unlinkSync(`${path}/${item}`);
         })
+
+        console.log({
+          path: `${uploadDir}/${HASH}.${suffix}`,
+          filename: `${HASH}.${suffix}`
+      });
         fs.rmdirSync(path) // 删除临时文件夹
-        resolve({
+        res({
             path: `${uploadDir}/${HASH}.${suffix}`,
             filename: `${HASH}.${suffix}`
         })
@@ -207,8 +220,8 @@ app.post('/upload_single_name', async (req, res) => {
 app.post('/upload_chunk', async (req, res) => {
     try {
         const { fields, files } = await multipartry_load(req);
-        const file = (files.file && files.file[0]) || {};
-        const filename = (fields.filename && fields.filename[0]) || '';
+        let file = (files.file && files.file[0]) || {};
+        let filename = (fields.filename && fields.filename[0]) || '';
         // const path = `${uploadDir}/${filename}`
         let isExists = false;
         // 创建存放切片的临时目录
@@ -221,6 +234,7 @@ app.post('/upload_chunk', async (req, res) => {
             res.send({
                 code: 0,
                 codeText: 'file is already exists',
+                originFilename:filename,
                 url: path.replace(FONTHOSTNAME, HOSTNAME),
             });
             return;
@@ -240,12 +254,14 @@ app.post('/upload_chunk', async (req, res) => {
 app.post('/upload_merge', async (req, res) => {
     const { HASH, count } = req.body;
     try {
-        const { filname, path } = await merge(HASH, count);
-        res.send({
-            code: 0,
-            codeText: 'merge sucessfully',
-            url: path.replace(baseDir, FONTHOSTNAME),
-        });
+         await merge(HASH, count);
+        // const { filname, path } = await merge(HASH, count);
+        // res.send({
+        //     code: 0,
+        //     codeText: 'merge sucessfully',
+        //     originFilename:filename,
+        //     url: path.replace(baseDir, FONTHOSTNAME),
+        // });
     } catch (e) {
         res.send({
             code: 1,

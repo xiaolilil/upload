@@ -339,17 +339,6 @@ const delay = (intval) => {
     abbreImg.show()
     abbreImg.attr('src', base64)
     changeDisable(false)
-
-
-
-
-
-
-
-
-
-
-
   })
 
   // 1. 点击选择文件按钮， 触发上传文件的输入框
@@ -645,4 +634,167 @@ const delay = (intval) => {
   }
 
 
-})()
+})();
+
+// 大文件上传
+(function () {
+  const
+    upIpt = $('.upload7 .fileIpt'),
+    selectBtn = $('.upload7 .selectFile'),
+    val = $('.upload7 .value'),
+    text = $('.upload7 .text'),
+    progress = $('.upload7 .progress');
+
+
+  const changeBuffer = (file) => {
+    return new Promise((res) => {
+      let fileReader = new FileReader()
+      fileReader.readAsArrayBuffer(file)
+      fileReader.onload = (e) => {
+        let buffer = e.target.result
+        const spark = new SparkMD5.ArrayBuffer();
+        spark.append(buffer);
+        const HASH = spark.end();
+        const suffix = /\.([0-9a-zA-Z]+)$/.exec(file.name)[1];
+        res({
+          buffer,
+          HASH,
+          suffix,
+          filename: `${HASH}.${suffix}`,
+        })
+      }
+    })
+  }
+
+  const changeDisable = flag => {
+    if (flag) {
+      selectBtn.addClass('loading')
+    } else {
+      selectBtn.removeClass('loading')
+    }
+  }
+
+  // 2. 监听用户选择文件的操作  预览
+  upIpt.change(async (e) => {
+    // 3. 获取用户选中的文件
+    let file = e.target.files[0]
+    if (!file) return
+    // changeDisable(true)
+
+    // 获取文件的hash
+    let { HASH, suffix } = await changeBuffer(file)
+    let already = []
+
+    try {
+      // 获取已经上传的切片信息
+      const res = await http.post(
+        '/upload_already',
+        {
+          HASH: HASH
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+      if (res.code == 0) {
+        already = res.fileList
+      }
+    } catch (error) {
+      // 之前没有上传过文件
+    }
+
+    // 实现文件切片处理
+    //  1. 固定数量 
+    //  2. 固定大小
+    let max = 1024 * 100,
+      count = Math.ceil(file.size / max), // 一共多少个切片
+      idx = 0,
+      chunks = []
+    // 固定数量 和固定大小结合进行
+    if (count > 100) {
+      max = file.size / 100;
+      count = 100
+    }
+    while (idx < count) {
+      // idx 0 0~max
+      // idx 1 max~max*2
+      // idx 2 max*2~max*3
+      // idx 3 max*3~max*4
+      // idx*max ~ (idx+1)*max
+      chunks.push({
+        file: file.slice(idx * max, (idx + 1) * max),
+        filename: `${HASH}_${idx + 1}.${suffix}`
+      })
+      idx++;
+    }
+
+
+    // 上传成功的处理
+    idx = 0
+    const clear = () => {
+      // 重置处理
+      val.css('width', `0}%`)
+      text.html(``)
+    }
+    const complete = async () => {
+      // 管控进度
+      idx++;
+      val.css('width', `${idx / count * 100}%`)
+      text.html(`上传中: ${(idx / count * 100).toFixed(2)}%`)
+      // 当所有切片都上传成功
+      if (idx < count) return
+      val.css('width', `100%`)
+      text.html(`上传完成:100%`) 
+      try {
+        const res = await http.post('/upload_merge', {
+          HASH:HASH,
+          count:count
+        }, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+        if (res.code == 0) {
+          // 合并成功
+          return
+        }
+        throw res.codeText
+
+      } catch (error) {
+        alert('切片合并失败')
+        clear()
+      }
+
+    }
+
+    // 把每一个切片都上传到服务器
+    chunks.forEach(async i => {
+      // 已经上传的不需要在上传
+      if (already.length > 0 && already.includes(i.filename)) {
+        complete()
+        return
+      }
+
+      let fm = new FormData()
+      fm.append('file', i.file)
+      fm.append('filename', i.filename)
+      try {
+        const res = await http.post('/upload_chunk', fm)
+        if (res.code == 0) {
+          complete()
+          return
+        }
+        return Promise.reject(res.codeText)
+      } catch (error) {
+        // alert('上传失败')
+      }
+    })
+  })
+
+  // 1. 点击选择文件按钮， 触发上传文件的输入框
+  selectBtn.click(() => {
+    // if(isCheckDisable('.selectBtn'))return
+    upIpt.click();
+  })
+})();
